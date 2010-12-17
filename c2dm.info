@@ -1,0 +1,9 @@
+; $Id$
+name = C2DM
+description = A c2dm interaction module for drupal.
+core = 6.x
+
+dependencies[] = http_client
+dependencies[] = http_client_oauth
+
+package = Services

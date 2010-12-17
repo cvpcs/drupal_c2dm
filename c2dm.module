@@ -1,0 +1,63 @@
+<?php
+// $Id$
+
+require_once dirname(__FILE__) . '/c2dm.registrar.inc';
+require_once dirname(__FILE__) . '/c2dm.statistics.inc';
+
+function c2dm_perm() {
+	return array(
+		'access c2dm registrar',
+		'access c2dm statistics',
+		'administer c2dm',
+		'send c2dm messages',
+		);
+}
+
+function c2dm_admin() {
+	$form = array();
+
+	$form['c2dm_senderid'] = array(
+		'#type' => 'textfield',
+		'#title' => t('Sender ID'),
+		'#default_value' => variable_get('c2dm_senderid', ''),
+		'#size' => 30,
+		'#maxlength' => 64,
+		'#description' => t('The sender id used to send data to devices.'),
+		'#required' => true,
+		);
+
+	return system_settings_form($form);
+}
+
+function c2dm_menu() {
+	$items = array();
+
+	$items['admin/settings/c2dm'] = array(
+		'title' => 'C2DM Settings',
+		'description' => 'Settings for Cloud2Device Messaging',
+		'page callback' => 'drupal_get_form',
+		'page arguments' => array('c2dm_admin'),
+		'access arguments' => array('administer c2dm'),
+		'type' => MENU_NORMAL_ITEM,
+		);
+	$items['c2dm/statistics'] = array(
+		'title' => 'C2DM Statistics',
+		'page callback' => 'c2dm_statistics',
+		'access arguments' => array('access c2dm statistics'),
+		'type' => MENU_CALLBACK,
+		);
+	$items['c2dm/register'] = array(
+		'title' => 'Register for C2DM',
+		'page callback' => 'c2dm_register',
+		'access arguments' => array('access c2dm registrar'),
+		'type' => MENU_CALLBACK,
+		);
+	$items['c2dm/unregister'] = array(
+		'title' => 'Unregister for C2DM',
+		'page callback' => 'c2dm_unregister',
+		'access arguments' => array('access c2dm registrar'),
+		'type' => MENU_CALLBACK,
+		);
+
+	return $items;
+}

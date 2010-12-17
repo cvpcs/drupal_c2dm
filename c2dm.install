@@ -1,0 +1,72 @@
+<?php
+// $Id$
+
+function c2dm_schema() {
+	$schema = array();
+
+	$schema['c2dm_devices'] = array(
+		'description' => 'Devices registered for c2dm',
+		'fields' => array(
+			'device_id' => array(
+				'description' => 'ANDROID_ID for the device',
+				'type' => 'varchar',
+				'length' => 255,
+				'not null' => true,
+				),
+			'registration_id' => array(
+				'description' => 'Registration ID for C2DM',
+				'type' => 'varchar',
+				'length' => 255,
+				'not null' => true,
+				'default' => '',
+				),
+			'gem_name' => array(
+				'description' => 'Name of the gem running on the device',
+				'type' => 'varchar',
+				'length' => 64,
+				'not null' => true,
+				'default' => 'unknown',
+				),
+			'gem_version' => array(
+				'description' => 'Version of the gem running on the device',
+				'type' => 'varchar',
+				'length' => 32,
+				'not null' => true,
+				'default' => '0.0.0',
+				),
+			'gem_patch' => array(
+				'description' => 'Patch level of the gem running on the device',
+				'type' => 'varchar',
+				'length' => 16,
+				'not null' => true,
+				'default' => '0',
+				),
+			'device' => array(
+				'description' => 'Name of the device',
+				'type' => 'varchar',
+				'length' => 32,
+				'not null' => true,
+				'default' => 'unknown',
+				),
+			),
+		'indexes' => array(
+			'gem_name' => array('gem_name'),
+			'device' => array('device'),
+			),
+		'unique keys' => array(
+			'registration_id' => array('registration_id'),
+			),
+		'primary key' => array('device_id'),
+		);
+
+	return $schema;
+}
+
+function c2dm_install() {
+	drupal_install_schema('c2dm');
+}
+
+function c2dm_uninstall() {
+	drupal_uninstall_schema('c2dm');
+	variable_del('c2dm_senderid');
+}
